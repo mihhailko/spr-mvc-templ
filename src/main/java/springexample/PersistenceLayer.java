@@ -31,36 +31,35 @@ public class PersistenceLayer {
             tx = session.beginTransaction();
             helloID = (Integer) session.save(data); 
             tx.commit();
+            session.disconnect();
+            session.close();
         } catch (HibernateException e) {
             if (tx!=null) tx.rollback();
             e.printStackTrace(); 
-        } finally {
-            session.close(); 
+        } finally { 
         }
         return helloID;
     }
 
     /* Method to SELECT*FROM */
-   public String listEmployees( ){
+   public List listStuff(){
        Session session = factory.openSession();
        Transaction tx = null;
        String response = new String();
+       List messages;
       
        try {
            tx = session.beginTransaction();
-           List messages = session.createQuery("FROM HELLOFROMSPRING").list(); 
-           for (Iterator iterator = messages.iterator(); iterator.hasNext();){
-               HelloFromSpring hello = (HelloFromSpring) iterator.next(); 
-               response += new String("Message: " + hello.getMessage()); 
-               response += new String("  Stuff: " + hello.getStuff()); 
-           }
+           messages = session.createQuery("FROM springexample.HelloFromSpring").list(); 
            tx.commit();
+           session.disconnect();
+           session.close();
+        
+           return messages;   
        } catch (HibernateException e) {
            if (tx!=null) tx.rollback();
            e.printStackTrace(); 
-       } finally {
-           session.close();
-           return response;
        }
+       return null;
    }
 }
