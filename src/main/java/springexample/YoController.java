@@ -1,5 +1,4 @@
 package springexample;
-
 import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -39,6 +38,32 @@ public class YoController {
         return ResponseEntity.ok()
             .header("Content-Type", "application/json")
             .body(response);
+  
+    }
+
+    @RequestMapping(value = "/h2insert", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> h2InsertResponse(Model model, @RequestParam(name = "id") int idParam){
+        ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+        HelloFromSpring hfs = (HelloFromSpring) context.getBean("helloFromSpring");
+        PersistenceLayer pers = new PersistenceLayer();
+        pers.initSession();
+        hfs.setMessage("id");
+        hfs.setStuff(idParam);
+        Integer respons;
+        String respStr = new String();
+        respons = pers.addStuff(hfs);
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            respStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(respons);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok()
+            .header("Content-Type", "application/json")
+            .body(respStr);
   
     }
     

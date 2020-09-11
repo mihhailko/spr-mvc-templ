@@ -5,9 +5,10 @@
    xsi:schemaLocation = "http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-   <bean id = "helloFromSpring" class = "springexample.HelloFromSpring">
-      <property name = "message" value = "Hello Spring User!"/>
-        <property name = "stuff" value = "20"/>
-   </bean>
-
+  <bean id = "helloFromSpring" class = "springexample.HelloFromSpring">
+    <property name = "id" value = "0"/>
+    <property name = "message" value = "Hello Spring User!"/>
+    <property name = "stuff" value = "20"/>
+  </bean>
+  
 </beans>

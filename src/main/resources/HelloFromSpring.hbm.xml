@@ -1,0 +1,21 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "springexample.HelloFromSpring" table = "HELLOFROMSPRING">
+      
+      <meta attribute = "class-description">
+         This class contains some stuff. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "id">
+         <generator class="native"/>
+      </id>
+      
+      <property name = "message" column = "message" type = "string"/>
+      <property name = "stuff" column = "stuff" type = "int"/>
+      
+   </class>
+</hibernate-mapping>
