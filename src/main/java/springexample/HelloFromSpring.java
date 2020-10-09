@@ -1,6 +1,6 @@
 package springexample;
 
-public class HelloFromSpring {
+public class HelloFromSpring implements IPersistence {
     private int id;
     private String message;
     private int stuff;

@@ -1,6 +1,7 @@
 package springexample;
 import java.util.List; 
 import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import org.hibernate.HibernateException; 
 import org.hibernate.Session; 
@@ -19,17 +20,26 @@ public class PersistenceLayer {
              throw new ExceptionInInitializerError(ex); 
          }
     }
-    
-    /* CREATE message, stuff*/
-    
-    public Integer addStuff(HelloFromSpring data){
+
+    public void closeSessionFactory() { 
+        
+        this.factory.close();
+    }
+
+     
+    /* CREATE session */
+
+
+    // polymorphic methods
+
+    public Integer insertWhatever(IPersistence stuff){
         Session session = factory.openSession();
         Transaction tx = null;
-        Integer helloID = null;
-        
+        Integer response = null;
+
         try {
             tx = session.beginTransaction();
-            helloID = (Integer) session.save(data); 
+            response = (Integer) session.save(stuff);
             tx.commit();
             session.disconnect();
             session.close();
@@ -38,28 +48,47 @@ public class PersistenceLayer {
             e.printStackTrace(); 
         } finally { 
         }
-        return helloID;
+        return response;
     }
 
-    /* Method to SELECT*FROM */
-   public List listStuff(){
-       Session session = factory.openSession();
-       Transaction tx = null;
-       String response = new String();
-       List messages;
+    public List<IPersistence> queryWhatever(IPersistence stuff, String query){
+        Session session = factory.openSession();
+        Transaction tx = null;
+        String response = new String();
+        List messages;
       
-       try {
-           tx = session.beginTransaction();
-           messages = session.createQuery("FROM springexample.HelloFromSpring").list(); 
-           tx.commit();
-           session.disconnect();
-           session.close();
+        try {
+            tx = session.beginTransaction();
+            messages = session.createQuery(query).list(); 
+            tx.commit();
+            session.disconnect();
+            session.close();
+            return messages;   
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace(); 
+        }
+        return null;
+    }
+
+    public String deleteWhatever(IPersistence data){
+        Session session = factory.openSession();
+        Transaction tx = null;
+        String response = null;
         
-           return messages;   
-       } catch (HibernateException e) {
-           if (tx!=null) tx.rollback();
-           e.printStackTrace(); 
-       }
-       return null;
-   }
+        try {
+            tx = session.beginTransaction();
+            session.delete(data);
+            tx.commit();
+            session.disconnect();
+            session.close();
+            response = "deleted";
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace(); 
+        } finally { 
+        }
+        return response;
+    }
+    
 }
